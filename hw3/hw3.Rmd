@@ -1,0 +1,23 @@
+---
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## 4c.
+
+PDF could be plot by plotting $p(x)$
+where $p(x) = log(\frac{x+1}{x})$  
+
+Plot of PDF could be done by following:
+
+```{r}
+x <- (1:9) ##vector from 1 to 9 which will serve as x values
+barplot(log10((x+1)/x), space = FALSE, main = "PDF of x",
+        names.arg = x, xlab = "x", ylim = c(0, 0.30), ylab = "PDF(x)",
+        col = "green1") ##a bargraph of PDF
+```
+
+Obviously, this distribution is not a uniform distribution, since the probability of each x differs significantly. As x increases, probability, or PDF(X) decreases rather than staying constant. Visually, a PDF of uniform distribution would look like a straight horizontal line, since the probability of each x is identical. However, this distribution looks like a stair case, indicating that the distribution is not uniform. 

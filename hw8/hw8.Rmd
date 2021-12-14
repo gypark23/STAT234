@@ -1,0 +1,90 @@
+---
+title: "hw8"
+author: "Kyu Park"
+date: '2021 3 7 '
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r include=FALSE}
+library(mosaic)
+library(openintro)
+```
+
+
+## 1.
+
+a) 
+```{r}
+data = na.omit(babies)
+modg = lm(bwt~gestation, data = data)
+summary(modg)
+```
+  i) $$SE = 16.74\sqrt{1+\frac{1}{1174}+\frac{(285-279)^2}{300687}} = 16.74812$$
+```{r}
+qt(0.025, 1173)
+```
+  $$CI =  -10.7541 + (0.4666)(285) \pm (1.961988)(16.74812) = (89.36728,155.08651)$$
+  (89.36728,155.08651)
+    
+    
+  ii)
+  $$RSS = \sqrt{\frac{1}{1172}SSE} = 16.74, SSE = 328426.7472$$
+  $$R^2 = \frac{SSR}{SST} = \frac{SST-SSE}{SST} = \frac{SST-328426.7472}{SST} = 0.1661$$
+  $$SST = 393844.28252$$
+      
+    
+b)
+  i) Let $H_o$: $\beta = 0$ for all parameters and there is no correlation of baby's weight and whether mother smokes or not 
+  $H_a$: $\beta \ne 0$ for any parameter, and there is some correlation of baby's weight and whether mother smokes or not
+  ii) Since P<2e-16, at 95% confidence level, reject $H_o$; there is evidence to say that there is correlation of baby's weight and mother smoking.
+  iii) $df = 1, F = \frac{328608-309075}{\frac{309075}{1171}} = 74.01$
+  iv) Red dots are the data points of non-smoking mothers and green dots are the data points of smoking mothers.
+  Solid line (regression equation for non-smoking mothers): $y = 0.45x - 3.18$
+  Dotted line (regression equation for smoking mothers): $y = 0.45x - 3.18 - 8.37 = 0.45x - 11.55$ for y = baby weight and x = gestation.
+
+c)
+```{r}
+modfull = lm(bwt~gestation+smoke+parity+age+height+weight, data = data)
+summary(modfull)$coefficients #coefficients
+summary(modfull)$sigma #residual standard error
+summary(modfull)$df #degrees of freedom
+```
+
+  i) $y = -80.41 + 0.44g - 8.40s -3.33p - 0.01a + 1.15h + 0.05w$ where g = gestation, s = smoke, p = parity, a = age, h = height, w = weight.
+  ii) For every 1 unit increase in gestation, the weight increases by 0.44 unit. For every 1 unit increase in smoke, the weight decreases by 8.40 unit. 
+  iii) $$SSE = (RSE^2)(df) = 1167(15.83^2) = 292437$$
+  $$SST = SSR + SSE = 292437 + 101649 =  394086$$
+  iv) $$R^2 = \frac{SSR}{SST} = \frac{101649}{394086} = 0.2579$$
+  $$Adjusted R^2 = 1-\frac{SSE/(n-7)}{SST/(n-1)} = 1-\frac{292437/1167}{394086/1173} = 0.25412$$
+
+  v)
+```{r}
+res = (modfull$res - mean(modfull$res))/sd(modfull$res)
+plot(modfull$fitted.values, res, xlab = "Predicted Values", ylab = "Residuals")
+abline(h=0, col = "RED", lwd = 2)
+```
+  
+```{r}
+qqnorm(res, pch = 20)
+qqline(res, col = "red")
+```
+  
+  Model assumptions are satisfied, as they are normally distributed, have constant variance around 0 and show no clear pattern with no clear outlier. 
+  
+
+d)
+```{r}
+modpart = lm(bwt~gestation+smoke+parity+height, data = data)
+anova(modpart, modfull)
+```
+
+
+  i) $H_o$: The coefficients of age and weight for baby’s weight are 0; no correlation of age and weight to baby's weight
+ $H_a$: The coefficients of age and weight for baby’s weight are not 0; there is correlation of age and weight to baby's weight
+  ii) Since Pr(>F) = 0.1377, at 95% confidence level, accept null hypothesis; there is no evidence to say that there is correlation of age and weight to body weight. 
+
+  
